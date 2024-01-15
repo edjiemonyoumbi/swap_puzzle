@@ -1,3 +1,4 @@
+#commentaire
 from grid import Grid
 
 g = Grid(2, 3)
