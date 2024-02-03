@@ -3,6 +3,8 @@ This is the grid module. It contains the Grid class and its associated methods.
 """
 
 import random
+import matplotlib.pyplot as plt
+import pygame 
 
 class Grid():
     """
@@ -98,6 +100,30 @@ class Grid():
             cell1=el[0]
             cell2=el[1]
             self.swap(cell1, cell2)
+
+    def representation(self):
+        pygame.init()
+        fenetre = pygame.display.set_mode((1000,1000))
+        pygame.display.set_caption('Représentation graphique de la grille')
+        blanc = pygame.Color(255, 255, 255)
+        noir = pygame.Color(0,0,0)
+        fenetre.fill(noir)
+        i=0
+        j=0
+        while i<(self.m):
+            while j<self.n
+            
+                pygame.draw.rect(fenetre,blanc,(1+(50*i),1+(50*j),50,50))
+                j+=1
+            i+=1
+
+        
+        pygame.display.update()
+        pygame.quit()
+        
+        
+        
+        
 
     @classmethod
     def grid_from_file(cls, file_name): 
