@@ -108,22 +108,19 @@ class Grid():
         blanc = pygame.Color(255, 255, 255)
         noir = pygame.Color(0,0,0)
         fenetre.fill(noir)
-        i=0
-        j=0
-        while i<(self.m):
-            while j<self.n
-            
-                pygame.draw.rect(fenetre,blanc,(1+(50*i),1+(50*j),50,50))
-                j+=1
-            i+=1
+        
+        for i in range(self.m):
+            for j in range(self.n):
+                font=pygame.font.Font(None, 32)
+                texte = font.render(str(self.state[i][j]),True,noir)
+                pygame.draw.rect(fenetre,blanc,((55*j),(55*i),50,50))
+                fenetre.blit(texte, ((55*j)+20, 20+(55*i)))
+                
 
         
         pygame.display.update()
+        
         pygame.quit()
-        
-        
-        
-        
 
     @classmethod
     def grid_from_file(cls, file_name): 
