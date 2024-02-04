@@ -106,7 +106,7 @@ class Graph:
             if sommet==dst:
                 break
             for v in self.graph[sommet] :
-                if v not in parents:
+                if v not in noeuds_visites:
                    file.append(v) # on rajoute tous les voisins pas encore vus dans la file
                    noeuds_visites.append(v)
                    parents[v]=sommet
