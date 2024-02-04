@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Feb  4 17:16:52 2024
+
+@author: aroldtoubert
+"""
+
 """
 This is the graph module. It contains a minimalistic Graph class.
 """
@@ -80,25 +88,44 @@ class Graph:
         self.graph[node2].append(node1)
         self.nb_edges += 1
         self.edges.append((node1, node2))
+        
+ 
 
-    def bfs(self, src, dst): 
-        """
-        Finds a shortest path from src to dst by BFS.  
+    def bfs(self, src, dst) :
+        n = len(self.nodes)
+        if src == dst:
+            return [src]
+        parents={src:None}
 
-        Parameters: 
-        -----------
-        src: NodeType
-            The source node.
-        dst: NodeType
-            The destination node.
-
-        Output: 
-        -------
-        path: list[NodeType] | None
-            The shortest path from src to dst. Returns None if dst is not reachable from src
-        """ 
-        # TODO: implement this function (and remove the line "raise NotImplementedError").
-        raise NotImplementedError
+        file = [src]
+        noeuds_visites = [src]
+        
+        while len(file) != 0 :
+            sommet = file.pop(0)
+            
+            if sommet==dst:
+                break
+            for v in self.graph[sommet] :
+                if v not in parents:
+                   file.append(v) # on rajoute tous les voisins pas encore vus dans la file
+                   noeuds_visites.append(v)
+                   parents[v]=sommet
+                   
+                
+        
+        if dst not in noeuds_visites: 
+            return None
+        
+        chemin=[dst]
+        i=dst
+        while i!=None:
+            chemin.append(parents[i])
+            i=parents[i]
+        chemin.pop()   
+        chemin.reverse()
+        return chemin
+            
+  
 
     @classmethod
     def graph_from_file(cls, file_name):
