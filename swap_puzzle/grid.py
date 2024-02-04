@@ -5,7 +5,7 @@ This is the grid module. It contains the Grid class and its associated methods.
 import random
 import matplotlib.pyplot as plt
 import pygame 
-
+from graph import Graph
 
 class Grid():
     """
@@ -220,12 +220,12 @@ def sont_liees_par_un_swap(g, h):
 
         
 def hashag(g, m, n):
-        grille=""
-        for i in range(m):
-            for j in range(n):
-                grille+=str(g[i][j])
-            grille+="/"
-        return grille
+    grille=""
+    for i in range(m):
+        for j in range(n):
+            grille+=str(g[i][j])
+        grille+="/"
+    return grille
 
 def graph_des_sommets(m, n):
     dico={}
@@ -233,13 +233,27 @@ def graph_des_sommets(m, n):
     
     for i in range(len(l)):
         dico[hashag(l[i], m, n)]=[]
+        
+        
 
     for i in l:
         for j in l:
             if sont_liees_par_un_swap(i, j)==True:
-                dico[hashag(j, m, n)].append(hashag(j, m, n))
+                dico[hashag(i, m, n)].append(hashag(j, m, n))
+          
+                
     return dico
 
+def grille_voulue(m, n):
+    l=[i for i in range(1, m*n+1)]
+    l=transforme_en_grille(l, m, n)
+    return hashag(l, m, n)
 
-            
+def bfs_sur_grilles(m, n, depart):
+    dico=Graph(list(graph_des_sommets(m, n).keys()))
+    for i in dico.nodes:
+        for j in graph_des_sommets(m, n)[i]:
+            dico.add_edge(i, j)
+    
+    return dico.bfs(depart, grille_voulue(m, n))
 
