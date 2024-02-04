@@ -122,6 +122,16 @@ class Grid():
         
         pygame.quit()
 
+
+    def hashage(self):
+        grille=""
+        for i in range(self.m):
+            for j in range(self.n):
+                grille+=str(self.state[i][j])
+            grille+="/"
+        return grille
+
+
     @classmethod
     def grid_from_file(cls, file_name): 
         """
