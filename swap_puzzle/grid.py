@@ -6,6 +6,7 @@ import random
 import matplotlib.pyplot as plt
 import pygame 
 
+
 class Grid():
     """
     A class representing the grid from the swap puzzle. It supports rectangular grids. 
@@ -122,7 +123,7 @@ class Grid():
         
         pygame.quit()
 
-
+    
     def hashage(self):
         grille=""
         for i in range(self.m):
@@ -159,4 +160,86 @@ class Grid():
                 initial_state[i_line] = line_state
             grid = Grid(m, n, initial_state)
         return grid
+
+
+
+#Question 7
+    
+def transforme_en_grille(l, m, n):
+    sortie=[]
+    compteur=0
+    for i in range(m):
+        k=[]
+        for j in range(n):
+            k.append(l[compteur])
+            compteur+=1
+        sortie.append(k)
+    return sortie
+
+def permutations_possibles(E):
+    #On construit toutes les permutations possibles des entiers de 1 à m*n puis on les transforme en grilles
+
+    if len(E)==1:
+        return [[e] for e in E]
+    Lp = permutations_possibles(E[1:]) 
+    L = []
+    for x in Lp :
+        for i in range(len(E)) : 
+            L.append(x[:i]+[E[0]]+x[i:])
+    return L
+
+def grilles_possibles(m, n):
+    E=[i for i in range(1, m*n+1)]
+    L=permutations_possibles(E)
+    sortie=[]
+    for i in L:
+        if transforme_en_grille(i, m, n) not in sortie : 
+            sortie.append(transforme_en_grille(i, m, n))
+    return sortie
+
+def sont_liees_par_un_swap(g, h):
+    
+    
+    l=[]
+    for i in range(len(h)):
+        
+        for j in range(len(h[0])):
+            if g[i][j]-h[i][j]!=0:
+                l.append((i, j))
+                if len(l)>2:
+                    return False
+    
+    if len(l)==2:
+        i1=l[0][0]
+        i2=l[1][0]
+        j1=l[0][1]
+        j2=l[1][1]
+        if ((g[i1][j1]-h[i1][j1])==-(g[i2][j2]-h[i2][j2])) and ((i1==i2 and abs(j2-j1)==1) or (j1==j2 and abs(i2-i1)==1)):
+            return True
+    return False
+
+        
+def hashag(g, m, n):
+        grille=""
+        for i in range(m):
+            for j in range(n):
+                grille+=str(g[i][j])
+            grille+="/"
+        return grille
+
+def graph_des_sommets(m, n):
+    dico={}
+    l=grilles_possibles(m, n)
+    
+    for i in range(len(l)):
+        dico[hashag(l[i], m, n)]=[]
+
+    for i in l:
+        for j in l:
+            if sont_liees_par_un_swap(i, j)==True:
+                dico[hashag(j, m, n)].append(hashag(j, m, n))
+    return dico
+
+
+            
 

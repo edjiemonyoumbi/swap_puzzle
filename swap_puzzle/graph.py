@@ -10,6 +10,8 @@ Created on Sun Feb  4 17:16:52 2024
 This is the graph module. It contains a minimalistic Graph class.
 """
 
+
+
 class Graph:
     """
     A class representing undirected graphs as adjacency lists. 
@@ -124,7 +126,8 @@ class Graph:
         chemin.pop()   
         chemin.reverse()
         return chemin
-            
+
+      
   
 
     @classmethod
