@@ -127,7 +127,39 @@ class Graph:
         chemin.reverse()
         return chemin
 
-      
+    def bfs_pour_puzzle(self, src, dst) :
+        n = len(self.nodes)
+        if src == dst:
+            return [src]
+        parents={src:None}
+
+        file = [src]
+        noeuds_visites = [src]
+        
+        while len(file) != 0 :
+            sommet = file.pop(0)
+            
+            if sommet==dst:
+                break
+            for v in self.graph[sommet] :
+                if v not in noeuds_visites:
+                   file.append(v) # on rajoute tous les voisins pas encore vus dans la file
+                   noeuds_visites.append(v)
+                   parents[v]=sommet
+                   
+                
+        
+        if dst not in noeuds_visites: 
+            return None
+        
+        chemin=[dst]
+        i=dst
+        while i!=None:
+            chemin.append(parents[i])
+            i=parents[i]
+        chemin.pop()   
+        chemin.reverse()
+        return chemin
   
 
     @classmethod
