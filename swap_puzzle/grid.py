@@ -6,6 +6,7 @@ import random
 import matplotlib.pyplot as plt
 import pygame 
 from graph import Graph
+import copy
 
 class Grid():
     """
@@ -256,4 +257,49 @@ def bfs_sur_grilles(m, n, depart):
             dico.add_edge(i, j)
     
     return dico.bfs(depart, grille_voulue(m, n))
+
+def voisins_de_la_grille(grille):
+    L=[]
+    m=len(grille)
+    n=len(grille[0])
+    grille=Grid(m, n, grille)
+    for i in range(m-1):
+        for j in range(n-1):
+            grille.swap((i, j), (i+1, j))
+            k=copy.deepcopy(grille.state)
+            L.append(k)
+            
+        
+            grille.swap((i, j), (i+1, j))
+            grille.swap((i, j), (i, j+1))
+            k=copy.deepcopy(grille.state)
+            L.append(k)
+            
+            
+            grille.swap((i, j), (i, j+1))
+            
+    for j in range(n-1):
+        grille.swap((m-1, j), (m-1, j+1))
+        k=copy.deepcopy(grille.state)
+        L.append(k)
+        
+        grille.swap((m-1, j), (m-1, j+1))
+        
+    for i in range(m-1):
+        grille.swap((i, n-1), (i+1, n-1))
+        k=copy.deepcopy(grille.state)
+        L.append(k)
+        
+        grille.swap((i, n-1), (i+1, n-1))
+    H=[]
+    for i in L:
+        H.append(hashag(i, m, n) )
+        
+    return H
+            
+
+                   
+
+def bfs_pour_puzzle(grille, src, dst) :
+    
 
