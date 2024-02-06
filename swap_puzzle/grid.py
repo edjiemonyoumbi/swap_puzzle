@@ -117,13 +117,15 @@ class Grid():
                 texte = font.render(str(self.state[i][j]),True,noir)
                 pygame.draw.rect(fenetre,blanc,((55*j),(55*i),50,50))
                 fenetre.blit(texte, ((55*j)+20, 20+(55*i)))
+
+    
                 
 
         
         pygame.display.update()
         
         pygame.quit()
-
+    
     
     def hashage(self):
         grille=""
@@ -132,8 +134,7 @@ class Grid():
                 grille+=str(self.state[i][j])
             grille+="/"
         return grille
-
-
+    
     @classmethod
     def grid_from_file(cls, file_name): 
         """
@@ -166,16 +167,7 @@ class Grid():
 
 #Question 7
     
-def transforme_en_grille(l, m, n):
-    sortie=[]
-    compteur=0
-    for i in range(m):
-        k=[]
-        for j in range(n):
-            k.append(l[compteur])
-            compteur+=1
-        sortie.append(k)
-    return sortie
+
 
 def permutations_possibles(E):
     #On construit toutes les permutations possibles des entiers de 1 à m*n puis on les transforme en grilles
