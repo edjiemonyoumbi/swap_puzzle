@@ -135,6 +135,195 @@ class Grid():
             grille+="/"
         return grille
     
+    def de_liste_a_grid(self, l):
+        sortie=[]
+        compteur=0
+        for i in range(self.m):
+            k=[]
+            for j in range(self.n):
+                k.append(l[compteur])
+                compteur+=1
+            sortie.append(k)
+        return Grid(self.m, self.n, sortie)
+    
+    def permutations_possibles(self, E):
+        #On construit toutes les permutations possibles des entiers de 1 à m*n puis on les transforme en grilles
+        
+        if len(E)==1:
+            return [[e] for e in E]
+        Lp = self.permutations_possibles(E[1:]) 
+        L = []
+        for x in Lp :
+            for i in range(len(E)) : 
+                L.append(x[:i]+[E[0]]+x[i:])
+        return L
+    
+    
+    
+
+    def grilles_possibles(self):
+        
+        L=self.permutations_possibles([i for i in range(1, self.m*self.n+1)])
+        sortie=[]
+        for i in L:
+            if self.de_liste_a_grid(i) not in sortie : 
+                sortie.append(self.de_liste_a_grid(i))
+        return sortie
+
+    @staticmethod
+    def sont_liees_par_un_swap(g, h):
+        l=[]
+        for i in range(len(h.state)):
+            
+            for j in range(len(h.state[0])):
+                if g.state[i][j]-h.state[i][j]!=0:
+                    l.append((i, j))
+                    if len(l)>2:
+                        return False
+        
+        if len(l)==2:
+            i1=l[0][0]
+            i2=l[1][0]
+            j1=l[0][1]
+            j2=l[1][1]
+            if ((g.state[i1][j1]-h.state[i1][j1])==-(g.state[i2][j2]-h.state[i2][j2])) and ((i1==i2 and abs(j2-j1)==1) or (j1==j2 and abs(i2-i1)==1)):
+                return True
+        return False
+
+        
+    
+
+    def graph_des_sommets(self):
+        dico={}
+        l=self.grilles_possibles()
+        
+        for k in l:
+            dico[k.hashage()]=[]
+        
+        
+
+        for i in l:
+            for j in l:
+                if self.sont_liees_par_un_swap(i, j)==True:
+                    dico[i.hashage()].append(j.hashage())
+          
+                
+        return dico
+
+    def grille_voulue(self):
+        l=[i for i in range(1, self.m*self.n+1)]
+        l=self.de_liste_a_grid(l)
+        return l.hashage()
+
+    def bfs_sur_grilles(self):
+        dico=Graph(list(self.graph_des_sommets().keys()))
+        for i in dico.nodes:
+            for j in self.graph_des_sommets()[i]:
+                dico.add_edge(i, j)
+        
+        return dico.bfs(self.hashage(), self.grille_voulue())
+
+    def voisins_de_la_grille(self):
+        L=[]
+        
+        for i in range(self.m-1):
+            for j in range(self.n-1):
+                self.swap((i, j), (i+1, j))
+                k=copy.deepcopy(self.state)
+                L.append(k)
+                
+            
+                self.swap((i, j), (i+1, j))
+                self.swap((i, j), (i, j+1))
+                k=copy.deepcopy(self.state)
+                L.append(k)
+                
+                
+                self.swap((i, j), (i, j+1))
+                
+        for j in range(self.n-1):
+            self.swap((self.m-1, j), (self.m-1, j+1))
+            k=copy.deepcopy(self.state)
+            L.append(k)
+            
+            self.swap((self.m-1, j), (self.m-1, j+1))
+            
+        for i in range(self.m-1):
+            self.swap((i, self.n-1), (i+1, self.n-1))
+            k=copy.deepcopy(self.state)
+            L.append(k)
+            
+            self.swap((i, self.n-1), (i+1, self.n-1))
+        H=[]
+        for y in L:
+            k=Grid(self.m, self.n, y).hashage()
+            H.append(k)
+            
+        return H
+            
+    @staticmethod
+    def de_hashage_a_grille(grille):
+
+        l=[]
+        k=[]
+        
+        for i in grille:
+            if i=='/':
+                l.append(k)
+                
+
+                k=[]
+                
+            else:
+                k.append(int(i))
+                
+        return l
+        
+
+
+
+    def bfs_ameliore(self) :
+        src=self.hashage()
+        dst=self.grille_voulue()
+        dico={src:self.voisins_de_la_grille()}
+        
+        if src == dst:
+            return [src]
+        parents={src:None}
+
+        file = [src]
+        noeuds_visites = [src]
+            
+        while len(file) != 0 :
+            sommet = file.pop(0)
+                
+            if sommet==dst:
+                break
+           
+            for v in Grid(self.m, self.n, self.de_hashage_a_grille(sommet)).voisins_de_la_grille() :
+                if v not in noeuds_visites:
+                    file.append(v) # on rajoute tous les voisins pas encore vus dans la file
+                    noeuds_visites.append(v)
+                    parents[v]=sommet
+                    
+                    
+                    
+                    
+            
+        if dst not in noeuds_visites: 
+            return None
+            
+        chemin=[dst]
+        i=dst
+        while i!=None:
+            chemin.append(parents[i])
+            i=parents[i]
+        chemin.pop()   
+        chemin.reverse()
+        return chemin
+
+
+
     @classmethod
     def grid_from_file(cls, file_name): 
         """
@@ -164,7 +353,7 @@ class Grid():
         return grid
 
 
-
+"""
 #Question 7
     
 
@@ -346,3 +535,4 @@ def bfs_ameliore(grille, src, dst) :
     return chemin
 
 
+"""
