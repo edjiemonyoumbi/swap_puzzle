@@ -8,6 +8,7 @@ import pygame
 from graph import Graph
 import copy
 
+#Création de la classe Grid
 class Grid():
     """
     A class representing the grid from the swap puzzle. It supports rectangular grids. 
@@ -23,6 +24,7 @@ class Grid():
         Note: lines are numbered 0..m and columns are numbered 0..n.
     """
     
+    #Init de la classe Grid
     def __init__(self, m, n, initial_state = []):
         """
         Initializes the grid.
@@ -42,6 +44,7 @@ class Grid():
             initial_state = [list(range(i*n+1, (i+1)*n+1)) for i in range(m)]            
         self.state = initial_state
 
+    #Permet d'imprimer la grille
     def __str__(self): 
         """
         Prints the state of the grid as text.
@@ -51,12 +54,14 @@ class Grid():
             output += f"{self.state[i]}\n"
         return output
 
+    #Renvoie une représentation de la grille avec le nombre de ligne et de colonnes
     def __repr__(self): 
         """
         Returns a representation of the grid with number of rows and columns.
         """
         return f"<grid.Grid: m={self.m}, n={self.n}>"
 
+    #Fonction qui permet de renvoyer True si la grille est bien triée, et False sinon
     def is_sorted(self):
         """
         Checks is the current state of the grid is sorte and returns the answer as a boolean.
@@ -64,10 +69,11 @@ class Grid():
         # TODO: implement this function (and remove the line "raise NotImplementedError").
         for i in range(self.m):
             for j in range(self.n-1):
-                if self.state[i][j]!=self.state[i][j+1]-1:
+                if self.state[i][j]!=self.state[i][j+1]-1: #On compare l'élement de la boucle et le suivant en parcourant la grille ligne par ligne, afin de voir s'ils se suivent par une incrémentation de 1
                     return False
         return True
 
+    #Implémentation de la fonction swap qui permet d'échanger deux cases de la grille, du moment qu'elles sont adjacentes
     def swap(self, cell1, cell2):
         """
         Implements the swap operation between two cells. Raises an exception if the swap is not allowed.
@@ -77,17 +83,19 @@ class Grid():
         cell1, cell2: tuple[int]
             The two cells to swap. They must be in the format (i, j) where i is the line and j the column number of the cell. 
         """
+        #On renomme les éléments des tuples pour pouvoir plus facilement les appeler ensuite dans la fonction
         i1=cell1[0]
         i2=cell2[0]
         j1=cell1[1]
         j2=cell2[1]
-        if (i1>=0 and i2>=0 and j1>=0 and j2>=0) and ((i1==i2 and abs(j2-j1)==1) or (j1==j2 and abs(i2-i1)==1)):
-            c=self.state[i1][j1]
+        if (i1>=0 and i2>=0 and j1>=0 and j2>=0) and ((i1==i2 and abs(j2-j1)==1) or (j1==j2 and abs(i2-i1)==1)): #Condition d'adjacence des cases pour pouvoir effectuer le swap
+            c=self.state[i1][j1] #On stocke la valeur de la case dans une variable pour pouvoir ensuite la réutiliser pour échanger les valeurs
             self.state[i1][j1]=self.state[i2][j2]
             self.state[i2][j2]=c
         else:
             raise Exception ("The swap is not allowed.")
 
+    #Implémentation d'une fonction qui permet d'effectuer une suite de swaps donnés en entrée
     def swap_seq(self, cell_pair_list):
         """
         Executes a sequence of swaps. 
@@ -101,50 +109,53 @@ class Grid():
         for el in cell_pair_list:
             cell1=el[0]
             cell2=el[1]
-            self.swap(cell1, cell2)
+            self.swap(cell1, cell2) #On parcourt la liste des cases à échanger et on utilise la méthode swap implémentée auparavant 
 
+    #Implémentation d'une méthode qui permet de représenter graphiquement la grille grâce à Pygame
     def representation(self):
-        pygame.init()
-        fenetre = pygame.display.set_mode((1000,1000))
-        pygame.display.set_caption('Représentation graphique de la grille')
-        blanc = pygame.Color(255, 255, 255)
+        pygame.init() #Initiation de Pygame
+        fenetre = pygame.display.set_mode((1000,1000)) #Création de la fenêtre
+        pygame.display.set_caption('Représentation graphique de la grille') #On donne un titre à la grille
+        blanc = pygame.Color(255, 255, 255) #on code les couleurs noir et blanc grâce au code rgb
         noir = pygame.Color(0,0,0)
-        fenetre.fill(noir)
+        fenetre.fill(noir) #On remplir la couleur par un fond noir car on va représenter la grille par des cases blanches
         
         for i in range(self.m):
             for j in range(self.n):
-                font=pygame.font.Font(None, 32)
-                texte = font.render(str(self.state[i][j]),True,noir)
-                pygame.draw.rect(fenetre,blanc,((55*j),(55*i),50,50))
-                fenetre.blit(texte, ((55*j)+20, 20+(55*i)))
+                font=pygame.font.Font(None, 32) #Police d'écriture
+                texte = font.render(str(self.state[i][j]),True,noir) #Texte à mettre dans les cases
+                pygame.draw.rect(fenetre,blanc,((55*j),(55*i),50,50)) #On dessine les cases
+                fenetre.blit(texte, ((55*j)+20, 20+(55*i))) #On met le texte dans les cases
 
     
                 
 
         
-        pygame.display.update()
+        pygame.display.update() #On met à jour le display
         
-        pygame.quit()
+        pygame.quit() #On quitte Pygame
     
-    
+    #Implémentation d'une fonction de hashage afin de rendre les grilles en objets qui puissent être utilisés pour les dictionnaires
     def hashage(self):
         grille=""
         for i in range(self.m):
             for j in range(self.n):
                 grille+=str(self.state[i][j])
-            grille+="/"
+            grille+="/" #Nous avons fait le choix de représenter les grilles par des chaînes de caractères, en utilisant des / pour indiquer les fins de ligne
         return grille
     
+    #Implémentation d'une fonction pour transformer une liste Python en un objet de la classe Grid
     def de_liste_a_grid(self, l):
         sortie=[]
         compteur=0
+        #On crée grâce à la boucle suivante un tableau à partir de la grille, en connaissant m et n
         for i in range(self.m):
             k=[]
             for j in range(self.n):
                 k.append(l[compteur])
                 compteur+=1
             sortie.append(k)
-        return Grid(self.m, self.n, sortie)
+        return Grid(self.m, self.n, sortie) #On crée un objet Grid à partir de m, n et du tableau créé
     
     def permutations_possibles(self, E):
         #On construit toutes les permutations possibles des entiers de 1 à m*n puis on les transforme en grilles
