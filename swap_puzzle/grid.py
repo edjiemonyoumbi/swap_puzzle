@@ -161,7 +161,7 @@ class Grid():
         #On construit toutes les permutations possibles des entiers de 1 à m*n puis on les transforme en grilles
         
         if len(E)==1:
-            return [[e] for e in E]
+            return [[E[0]]]
         Lp = self.permutations_possibles(E[1:]) 
         L = []
         for x in Lp :
@@ -547,3 +547,6 @@ def bfs_ameliore(grille, src, dst) :
 
 
 """
+
+
+    
