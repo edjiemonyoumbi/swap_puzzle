@@ -74,6 +74,7 @@ class Grid():
         return True
 
     #Implémentation de la fonction swap qui permet d'échanger deux cases de la grille, du moment qu'elles sont adjacentes
+    #Question 2
     def swap(self, cell1, cell2):
         """
         Implements the swap operation between two cells. Raises an exception if the swap is not allowed.
@@ -112,6 +113,7 @@ class Grid():
             self.swap(cell1, cell2) #On parcourt la liste des cases à échanger et on utilise la méthode swap implémentée auparavant 
 
     #Implémentation d'une méthode qui permet de représenter graphiquement la grille grâce à Pygame
+    #Algorithme de la question 4
     def representation(self):
         pygame.init() #Initiation de Pygame
         fenetre = pygame.display.set_mode((1000,1000)) #Création de la fenêtre
@@ -136,6 +138,7 @@ class Grid():
         pygame.quit() #On quitte Pygame
     
     #Implémentation d'une fonction de hashage afin de rendre les grilles en objets qui puissent être utilisés pour les dictionnaires
+    #Algorithme de la question 6
     def hashage(self):
         grille=""
         for i in range(self.m):
@@ -226,6 +229,7 @@ class Grid():
         l=self.de_liste_a_grid(l)
         return l.hashage()
 
+    #Algorithme de la question 7
     def bfs_sur_grilles(self):
         dico=Graph(list(self.graph_des_sommets().keys()))
         for i in dico.nodes:
@@ -233,6 +237,11 @@ class Grid():
                 dico.add_edge(i, j)
         
         return dico.bfs(self.hashage(), self.grille_voulue())
+    
+    #La longueur du chemin renvoyé est bien plus faible que dans la méthode naïve : la méthode naïve n'était donc bien pas optimale en terme de nombre de swaps à effectuer pour atteindre la grille ordonnée. 
+    #Nombre de noeuds : Il est égal au nombre de permutations de la liste des entiers de 1 à m*n, donc il y en a (m*n)!
+    #Nombre d'arêtes : On regarde les add_edge dans l'algo : (n*m)!*m*n, car il y a (m*n)! noeuds, et m*n voisins par un swap pour chaque noeud. 
+    #Complexité de l'algo : Si on est dans le meilleur cas : O((n*m)!) pour la création du graph. Dans le pire des cas : la complexité du bfs est de O(nbre d'arêtes+nbre de sommets) donc ici de O(m*n+(m*n)!*m*n)=O((m*n+1)!)
 
     def voisins_de_la_grille(self):
         L=[]
@@ -271,7 +280,9 @@ class Grid():
             H.append(k)
             
         return H
-            
+     
+
+
     @staticmethod
     def de_hashage_a_grille(grille):
 
@@ -292,7 +303,7 @@ class Grid():
         
 
 
-
+    #Algorithme de la question 8
     def bfs_ameliore(self) :
         src=self.hashage()
         dst=self.grille_voulue()

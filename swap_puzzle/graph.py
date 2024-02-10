@@ -91,8 +91,9 @@ class Graph:
         self.nb_edges += 1
         self.edges.append((node1, node2))
         
- 
 
+ 
+    #Algorithme de la question 5
     def bfs(self, src, dst) :
         n = len(self.nodes)
         if src == dst:
