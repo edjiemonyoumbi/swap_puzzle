@@ -1,4 +1,5 @@
 from grid import Grid
+Solver=(4,5,[[20,19,18,17,16],[15,14,13,12,11],[10,9,8,7,6],[5,4,3,2,1]])
 class Solver(Grid): 
     
     """
@@ -19,7 +20,7 @@ class Solver(Grid):
                     return (i, j)
                 compteur+=1
         
-
+    #Algorithme de la question 3
     def get_solution(self):
         L=[]
         for i in range(1, (self.m)*(self.n)+1):
@@ -46,9 +47,7 @@ class Solver(Grid):
         
         return L
 
-                
-
-        # TODO: implement this function (and remove the line "raise NotImplementedError").
-        # NOTE: you can add other methods and subclasses as much as necessary. The only thing imposed is the format of the solution returned.
-
-
+        #La complexité de cet algorithme est de O((n*m)**2).
+        #En terme de nombre de swaps, il est de 0 dans le meilleur des cas, et de (m*n)*(m+n-2)/2. La longueur de chemin parcourue n'est donc pas optimale. 
+        #Toute grille peut être résolue par cet algorithme naïf. 
+        

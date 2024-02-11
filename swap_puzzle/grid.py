@@ -144,7 +144,7 @@ class Grid():
         for i in range(self.m):
             for j in range(self.n):
                 grille+=str(self.state[i][j])
-            grille+="/" #Nous avons fait le choix de représenter les grilles par des chaînes de caractères, en utilisant des / pour indiquer les fins de ligne
+            grille+="/" #Nous avons fait le choix de représenter les grilles par des chaînes de caractères, en utilisant des / pour indiquer les fins de ligne. EX : [[1, 2], [3, 4]] sera '12/34/'
         return grille
     
     #Implémentation d'une fonction pour transformer une liste Python en un objet de la classe Grid
@@ -161,69 +161,71 @@ class Grid():
         return Grid(self.m, self.n, sortie) #On crée un objet Grid à partir de m, n et du tableau créé
     
     def permutations_possibles(self, E):
-        #On construit toutes les permutations possibles des entiers de 1 à m*n puis on les transforme en grilles
+        #On construit toutes les permutations possibles des entiers de 1 à m*n puis on les transforme en grilles.
+        #On procède pour cela par récursivité.
         
         if len(E)==1:
-            return [[E[0]]]
-        Lp = self.permutations_possibles(E[1:]) 
-        L = []
+            return [[E[0]]] #Initiation de la récursivité : si la liste ne contient qu'un seul élément i, on renvoie [[i]]
+        Lp = self.permutations_possibles(E[1:]) #On fait un appel récursif sur la liste à laquelle on a enlevé le premier élément
+        L = [] #On crée une liste dans laquelle on va stocker toutes les permutations
         for x in Lp :
             for i in range(len(E)) : 
-                L.append(x[:i]+[E[0]]+x[i:])
+                L.append(x[:i]+[E[0]]+x[i:]) #On a utilisé un appel récursif, donc à la fin des appels récursifs, on se sera retrouvé dans le cas de l'initialisation, où Lp contient une liste de la forme [[e]], puis on case l'élement précédent avant ou après, cela donne une liste de deux permutations, à laquelle on va encore faire des permutations en ajoutant l'élément précédent dans ces listes, etc. Au final, on arrivera à des tailles de permutations de len(E), et en construisant au fur et à mesure par récursivité les permutations en augmentant leur taille et en casant à chaque fois les éléments dans tous les emplacments possibles, on aura obtenu la liste des permutations.  
         return L
     
     
     
-
+    #Implémentation d'une fonction qui utilise la fonction permutations_possibles sur la grille qui nous intéresse: [1, 2, ..., m*n] afin d'obtenir toutes les grilles d'entiers de 1 à m*n possibles. 
     def grilles_possibles(self):
         
-        L=self.permutations_possibles([i for i in range(1, self.m*self.n+1)])
+        L=self.permutations_possibles([i for i in range(1, self.m*self.n+1)]) #Appel de permutations_possibles
         sortie=[]
         for i in L:
             if self.de_liste_a_grid(i) not in sortie : 
-                sortie.append(self.de_liste_a_grid(i))
+                sortie.append(self.de_liste_a_grid(i)) #On transforme les permutations en objets Grid
         return sortie
 
-    @staticmethod
+    @staticmethod #On utilise une staticmethod qui prend en entrée deux objets de type Grid, et qui renvoie True si un swap permet de passer de l'une à l'autre et False sinon, afin de pouvoir construire les voisins de toutes les grilles. 
     def sont_liees_par_un_swap(g, h):
         l=[]
         for i in range(len(h.state)):
             
             for j in range(len(h.state[0])):
                 if g.state[i][j]-h.state[i][j]!=0:
-                    l.append((i, j))
+                    l.append((i, j)) 
                     if len(l)>2:
-                        return False
+                        return False #On stocke dans une liste l les emplacements des éléments différents entre les deux grilles, mais on renvoie false si le nombre de différences est strictement supérieur à 2, car cela indique qu'il ne serait pas possible de passer de l'une à l'autre par un swap. 
         
-        if len(l)==2:
+        if len(l)==2: #Il nous faut que le nombre de différences soit exactement égal à 2
             i1=l[0][0]
             i2=l[1][0]
             j1=l[0][1]
-            j2=l[1][1]
-            if ((g.state[i1][j1]-h.state[i1][j1])==-(g.state[i2][j2]-h.state[i2][j2])) and ((i1==i2 and abs(j2-j1)==1) or (j1==j2 and abs(i2-i1)==1)):
-                return True
-        return False
+            j2=l[1][1] #On utilise des noms pour leurs indices pour pouvoir plus facilement les appeler.
+            if ((g.state[i1][j1]-h.state[i1][j1])==-(g.state[i2][j2]-h.state[i2][j2])) and ((i1==i2 and abs(j2-j1)==1) or (j1==j2 and abs(i2-i1)==1)): #Si la différence des éléments de l'emplacement 1 est égal à la différence des ééments de l'emplacement 2 et les emplacements des différences sont adjacents verticalement ou horizontalement
+                return True #Alors, on a bien un swap qui permet de passer de l'une à l'autre
+        return False #Sinon, il n'est pas possible, donc on renvoie False. 
 
         
     
-
+    #On implémente un algorithme qui vient calculer le graph des sommets en prenant la taille de la grille qu'on a entrée. 
     def graph_des_sommets(self):
-        dico={}
-        l=self.grilles_possibles()
+        dico={} #On stocke le graph dans un dictionnaire
+        l=self.grilles_possibles() 
         
         for k in l:
-            dico[k.hashage()]=[]
+            dico[k.hashage()]=[] #On construit toutes les clés du dictionnaire en prenant toutes les grilles possibles comme clés. 
         
         
 
         for i in l:
             for j in l:
                 if self.sont_liees_par_un_swap(i, j)==True:
-                    dico[i.hashage()].append(j.hashage())
+                    dico[i.hashage()].append(j.hashage()) #Pour chaque clé, on ajoute dans ses valeurs toutes ses voisines parmi toutes les grilles possibles, si elles sont bien liées par un swap. 
           
                 
         return dico
 
+    #On crée une fonction qui renvoie, sous forme hashable, la grille souhaitée, qui est celles des entiers ordonnés par ordre croissant. 
     def grille_voulue(self):
         l=[i for i in range(1, self.m*self.n+1)]
         l=self.de_liste_a_grid(l)
@@ -231,25 +233,26 @@ class Grid():
 
     #Algorithme de la question 7
     def bfs_sur_grilles(self):
-        dico=Graph(list(self.graph_des_sommets().keys()))
+        dico=Graph(list(self.graph_des_sommets().keys())) #On crée un objet de type graph, en initialisant ses nodes à partir de tous les noeuds du graph des grilles possibles. 
         for i in dico.nodes:
             for j in self.graph_des_sommets()[i]:
-                dico.add_edge(i, j)
+                dico.add_edge(i, j) #On ajoute les add_edge entre les grilles et leurs voisines. On a ainsi construit un objet de type Graph qui contient le graph de toutes les grilles possibles, et leurs voisines par un swap. 
         
-        return dico.bfs(self.hashage(), self.grille_voulue())
+        return dico.bfs(self.hashage(), self.grille_voulue()) #On peut maintenant grâce à cela utiliser l'algorithme bfs précédemment construit dans la classe Graph, afin de résoudre le swap puzzle. 
     
-    #La longueur du chemin renvoyé est bien plus faible que dans la méthode naïve : la méthode naïve n'était donc bien pas optimale en terme de nombre de swaps à effectuer pour atteindre la grille ordonnée. 
+    #La longueur du chemin renvoyé est bien plus faible que dans la méthode naïve : la méthode naïve n'était donc bien pas optimale en terme de nombre de swaps à effectuer pour atteindre la grille ordonnée. Cependant, la méthode naïve est plus rapide.
     #Nombre de noeuds : Il est égal au nombre de permutations de la liste des entiers de 1 à m*n, donc il y en a (m*n)!
-    #Nombre d'arêtes : On regarde les add_edge dans l'algo : (n*m)!*m*n, car il y a (m*n)! noeuds, et m*n voisins par un swap pour chaque noeud. 
-    #Complexité de l'algo : Si on est dans le meilleur cas : O((n*m)!) pour la création du graph. Dans le pire des cas : la complexité du bfs est de O(nbre d'arêtes+nbre de sommets) donc ici de O(m*n+(m*n)!*m*n)=O((m*n+1)!)
+    #Nombre d'arêtes : On regarde les add_edge dans l'algo : (n*m)!*(m*(n−1)+n*(m−1)), car il y a (m*n)! noeuds, et m*(n−1)+n*(m−1) voisins par un swap pour chaque noeud, car il y a m*(n-1) swaps horizontaux, et n*(m-1) swaps verticaux. 
+    #Complexité de l'algo : La complexité du bfs est de O(nbre d'arêtes+nbre de sommets) donc ici de O((n*m)!*(m×(n−1)+n×(m−1))+1)=O((m*n)!(2m*n-m-n+1))
 
-    def voisins_de_la_grille(self):
+    #Question 8 
+    def voisins_de_la_grille(self): #On crée un algorithme qui construit toutes les grilles voisines d'une grille par un swap, au lieu de les chercher parmi toutes les grilles possibles comme précédemment. 
         L=[]
         
-        for i in range(self.m-1):
+        for i in range(self.m-1): #Swaps en excluant la dernière colonne et la dernière ligne
             for j in range(self.n-1):
                 self.swap((i, j), (i+1, j))
-                k=copy.deepcopy(self.state)
+                k=copy.deepcopy(self.state) #Il faut utiliser une deep copy, sinon la valeur de k est modifiée quand on modifie self.state
                 L.append(k)
                 
             
@@ -261,14 +264,14 @@ class Grid():
                 
                 self.swap((i, j), (i, j+1))
                 
-        for j in range(self.n-1):
+        for j in range(self.n-1): #Swaps sur la dernière ligne
             self.swap((self.m-1, j), (self.m-1, j+1))
             k=copy.deepcopy(self.state)
             L.append(k)
             
             self.swap((self.m-1, j), (self.m-1, j+1))
             
-        for i in range(self.m-1):
+        for i in range(self.m-1): #Swaps sur la dernière colonne
             self.swap((i, self.n-1), (i+1, self.n-1))
             k=copy.deepcopy(self.state)
             L.append(k)
@@ -283,7 +286,7 @@ class Grid():
      
 
 
-    @staticmethod
+    @staticmethod #On utilise une staticmethod car cette fonction prend en entrée un objet de type string et non une grille, et qui permet de le transformer en tableau. 
     def de_hashage_a_grille(grille):
 
         l=[]
@@ -304,14 +307,16 @@ class Grid():
 
 
     #Algorithme de la question 8
+    #On reprend l'algorithme de la classe Graph, en le modifiant pour qu'il construise les voisins au fur et à mesure, afin de ne pas conserver tout le graph en mémoire, mais le construire au fur et à mesure qu'on le parcourt. 
     def bfs_ameliore(self) :
         src=self.hashage()
         dst=self.grille_voulue()
-        dico={src:self.voisins_de_la_grille()}
+        dico={src:self.voisins_de_la_grille()} #On initialise le dictionnaire qu'on parcourt avec uniquement la grille en entrée et ses voisins au départ. 
         
         if src == dst:
             return [src]
-        parents={src:None}
+        
+        parents={src:None} #On initialise le dictionnaire des parents.
 
         file = [src]
         noeuds_visites = [src]
@@ -322,7 +327,7 @@ class Grid():
             if sommet==dst:
                 break
            
-            for v in Grid(self.m, self.n, self.de_hashage_a_grille(sommet)).voisins_de_la_grille() :
+            for v in Grid(self.m, self.n, self.de_hashage_a_grille(sommet)).voisins_de_la_grille() : #C'est ici que la différence apparaît : on regarde pour chaque sommet qu'on parcourt ses voisins au fur et à mesure, au lieu de stocker le graph en mémoire. La fin de l'algorithme est similaire à celui de Graph. 
                 if v not in noeuds_visites:
                     file.append(v) # on rajoute tous les voisins pas encore vus dans la file
                     noeuds_visites.append(v)
@@ -375,189 +380,7 @@ class Grid():
         return grid
 
 
-"""
-#Question 7
-    
 
-
-def permutations_possibles(E):
-    #On construit toutes les permutations possibles des entiers de 1 à m*n puis on les transforme en grilles
-
-    if len(E)==1:
-        return [[e] for e in E]
-    Lp = permutations_possibles(E[1:]) 
-    L = []
-    for x in Lp :
-        for i in range(len(E)) : 
-            L.append(x[:i]+[E[0]]+x[i:])
-    return L
-
-def grilles_possibles(m, n):
-    E=[i for i in range(1, m*n+1)]
-    L=permutations_possibles(E)
-    sortie=[]
-    for i in L:
-        if transforme_en_grille(i, m, n) not in sortie : 
-            sortie.append(transforme_en_grille(i, m, n))
-    return sortie
-
-def sont_liees_par_un_swap(g, h):
-    
-    
-    l=[]
-    for i in range(len(h)):
-        
-        for j in range(len(h[0])):
-            if g[i][j]-h[i][j]!=0:
-                l.append((i, j))
-                if len(l)>2:
-                    return False
-    
-    if len(l)==2:
-        i1=l[0][0]
-        i2=l[1][0]
-        j1=l[0][1]
-        j2=l[1][1]
-        if ((g[i1][j1]-h[i1][j1])==-(g[i2][j2]-h[i2][j2])) and ((i1==i2 and abs(j2-j1)==1) or (j1==j2 and abs(i2-i1)==1)):
-            return True
-    return False
-
-        
-def hashag(g, m, n):
-    grille=""
-    for i in range(m):
-        for j in range(n):
-            grille+=str(g[i][j])
-        grille+="/"
-    return grille
-
-def graph_des_sommets(m, n):
-    dico={}
-    l=grilles_possibles(m, n)
-    
-    for i in range(len(l)):
-        dico[hashag(l[i], m, n)]=[]
-        
-        
-
-    for i in l:
-        for j in l:
-            if sont_liees_par_un_swap(i, j)==True:
-                dico[hashag(i, m, n)].append(hashag(j, m, n))
-          
-                
-    return dico
-
-def grille_voulue(m, n):
-    l=[i for i in range(1, m*n+1)]
-    l=transforme_en_grille(l, m, n)
-    return hashag(l, m, n)
-
-def bfs_sur_grilles(m, n, depart):
-    dico=Graph(list(graph_des_sommets(m, n).keys()))
-    for i in dico.nodes:
-        for j in graph_des_sommets(m, n)[i]:
-            dico.add_edge(i, j)
-    
-    return dico.bfs(depart, grille_voulue(m, n))
-
-def voisins_de_la_grille(grille):
-    L=[]
-    m=len(grille)
-    n=len(grille[0])
-    grille=Grid(m, n, grille)
-    for i in range(m-1):
-        for j in range(n-1):
-            grille.swap((i, j), (i+1, j))
-            k=copy.deepcopy(grille.state)
-            L.append(k)
-            
-        
-            grille.swap((i, j), (i+1, j))
-            grille.swap((i, j), (i, j+1))
-            k=copy.deepcopy(grille.state)
-            L.append(k)
-            
-            
-            grille.swap((i, j), (i, j+1))
-            
-    for j in range(n-1):
-        grille.swap((m-1, j), (m-1, j+1))
-        k=copy.deepcopy(grille.state)
-        L.append(k)
-        
-        grille.swap((m-1, j), (m-1, j+1))
-        
-    for i in range(m-1):
-        grille.swap((i, n-1), (i+1, n-1))
-        k=copy.deepcopy(grille.state)
-        L.append(k)
-        
-        grille.swap((i, n-1), (i+1, n-1))
-    H=[]
-    for i in L:
-        H.append(hashag(i, m, n) )
-        
-    return H
-            
-
-def de_hashage_a_grille(grille):
-
-    l=[]
-    k=[]
-    for i in grille:
-        if i=='/':
-            l.append(k)
-            
-
-            k=[]
-            
-        else:
-            k.append(int(i))
-            
-    return l
-        
-
-
-
-def bfs_ameliore(grille, src, dst) :
-    dico={src:voisins_de_la_grille(grille)}
-    
-    if src == dst:
-        return [src]
-    parents={src:None}
-
-    file = [src]
-    noeuds_visites = [src]
-        
-    while len(file) != 0 :
-        sommet = file.pop(0)
-            
-        if sommet==dst:
-            break
-        for v in voisins_de_la_grille(de_hashage_a_grille(sommet)) :
-            if v not in noeuds_visites:
-                file.append(v) # on rajoute tous les voisins pas encore vus dans la file
-                noeuds_visites.append(v)
-                parents[v]=sommet
-                
-                   
-                
-        
-    if dst not in noeuds_visites: 
-        return None
-        
-    chemin=[dst]
-    i=dst
-    while i!=None:
-        chemin.append(parents[i])
-        i=parents[i]
-    chemin.pop()   
-    chemin.reverse()
-    return chemin
-
-
-"""
 
 
     
