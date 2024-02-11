@@ -329,7 +329,7 @@ class Grid():
            
             for v in Grid(self.m, self.n, self.de_hashage_a_grille(sommet)).voisins_de_la_grille() : #C'est ici que la différence apparaît : on regarde pour chaque sommet qu'on parcourt ses voisins au fur et à mesure, au lieu de stocker le graph en mémoire. La fin de l'algorithme est similaire à celui de Graph. 
                 if v not in noeuds_visites:
-                    file.append(v) # on rajoute tous les voisins pas encore vus dans la file
+                    file.append(v) 
                     noeuds_visites.append(v)
                     parents[v]=sommet
                     
