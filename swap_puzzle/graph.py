@@ -95,37 +95,43 @@ class Graph:
  
     #Algorithme de la question 5
     def bfs(self, src, dst) :
-        n = len(self.nodes)
+        
+        #si la grille est déjà la grille voulue, on renvoie elle même :
         if src == dst:
             return [src]
+        
+        #On initialise un dictionnaire de parents, qui va nous permettre de remonter grâce aux parents à la solution. 
         parents={src:None}
 
+        #On crée une file de noeuds à visiter et une liste avec les noeuds visités. 
         file = [src]
         noeuds_visites = [src]
         
-        while len(file) != 0 :
-            sommet = file.pop(0)
+        
+        while len(file) != 0 : #On continue de parcourir tant que la file de noeuds à visiter contient encore des neouds. 
+            sommet = file.pop(0) #On enlève le premier élément de la file, et on le retient en mémoire dans sommet
             
-            if sommet==dst:
+            if sommet==dst: #Si sommet est bien égal au noeud qu'on souhaite, alors on n'a plus besoin de continuer à parcourir le graph, donc on stoppe la boucle. 
                 break
-            for v in self.graph[sommet] :
-                if v not in noeuds_visites:
+
+            for v in self.graph[sommet] : #On regarde parmi tous les voisins du sommet auquel on se situe ...
+                if v not in noeuds_visites: #ceux que l'on n'a pas encore visités 
                    file.append(v) # on rajoute tous les voisins pas encore vus dans la file
-                   noeuds_visites.append(v)
-                   parents[v]=sommet
+                   noeuds_visites.append(v) #On les ajoute aux noeuds visités pour ne pas avoir à les réintégrer dans les parents
+                   parents[v]=sommet #Et on met dans le dictionnaire des parents leurs parents qui est donc sommet. Cela permettra ensuite, en partant de dst, et en parcourant le dictionnaire des parents, d'arriver de voisin en voisin à la grille d'origine. Il ne nous restera alors plus qu'à inverser la liste des noeuds parcourus pour obtenir le chemin obtenu par bfs pour aller de src à dst. 
                    
                 
         
         if dst not in noeuds_visites: 
-            return None
+            return None #Si nous n'avons pas vu le noeud que l'on voulait en parcourant le graph, alors il n'y a pas de chemin possible pour aller de src à dst, donc on renvoie None. 
         
         chemin=[dst]
         i=dst
-        while i!=None:
+        while i!=None: #On avait mis comme valeur à src dans parents la valeur None exprès pour pouvoir savoir quand arrêter la liste
             chemin.append(parents[i])
-            i=parents[i]
-        chemin.pop()   
-        chemin.reverse()
+            i=parents[i] #On parcourt le chemin inverse en partant de l'arrivée dst puis en parcourant de parent en parent jusqu'à arriver à src.
+        chemin.pop()   #On enlève le None de la liste du chemin
+        chemin.reverse() #On l'inverse afin d'avoir le chemin de src à dst et non l'inverse
         return chemin
 
     
