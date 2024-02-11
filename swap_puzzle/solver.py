@@ -49,7 +49,7 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
         
         return L
 
-        #La complexité de cet algorithme est de O((n*m)!**2).
+        #La complexité de cet algorithme est de O((n*m)**2).
         #En terme de nombre de swaps, il est de 0 dans le meilleur des cas, et dans le pire cas (grille complètement inversée) de (m*n)*(m+n-2)/2, car il y a (m*n) éléments dans la grille, et ils font en moyenne (m+n-2)/2 swaps pour arriver dans leur position voulue. La longueur de chemin parcourue n'est donc pas optimale. 
         #Toute grille peut être résolue par cet algorithme naïf. 
         
