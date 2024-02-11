@@ -134,8 +134,7 @@ class Graph:
         chemin.reverse() #On l'inverse afin d'avoir le chemin de src à dst et non l'inverse
         return chemin
 
-    
-  
+        #Nous pouvons vérifier que cet algorithme fonctionne sur graph1.in et graph2.in en comparant avec graph1.out et graph2.out. Pour cela, on crée graphique=Graph.graph_from_file("/Users/aroldtoubert/projet_programmation/input/graph1.in") et on applique bfs en mettant demandant graphique.bfs(src, dst).
 
     @classmethod
     def graph_from_file(cls, file_name):
