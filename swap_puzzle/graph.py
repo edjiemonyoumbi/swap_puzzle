@@ -137,7 +137,7 @@ class Graph:
         #Nous pouvons vérifier que cet algorithme fonctionne sur graph1.in et graph2.in en comparant avec graph1.path.out et graph2.path.out. Pour cela, on crée graphique=Graph.graph_from_file("/Users/aroldtoubert/projet_programmation/input/graph1.in") et on applique bfs en mettant demandant graphique.bfs(src, dst).
 
     
-    def astar(src, dst, h):
+ 
 
 
     @classmethod
