@@ -49,6 +49,7 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
             if sommet==dst:
                 break
             for voisin in Grid(self.m, self.n, self.de_hashage_a_grille(sommet)).voisins_de_la_grille():
+                print(voisin)
                 d=1
                 if voisin not in coutsdepart.keys() and voisin not in coutsarrivee.keys() : 
                     coutsarrivee[voisin]=maths.inf
