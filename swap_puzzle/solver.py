@@ -1,4 +1,6 @@
 from grid import Grid
+import heapq
+import math as maths
 
 class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la classe Grid, comme swap
     
@@ -21,6 +23,63 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
                 if compteur==k:
                     return (i, j)
                 compteur+=1
+
+    def heuristique(self):
+        S=0
+        for i in range(self.m):
+            for j in range(self.n):
+                x=self.state[i][j]
+                
+                posx=self.position_voulue(x)
+                
+                S+=abs(((i-posx[0]))+abs((j-posx[1])))//2
+        return S
+    
+    def astar(self):
+        
+        src=super().hashage()
+        dst=super().grille_voulue()
+        avisiter=[]
+        heapq.heappush(avisiter, (0, src))
+        coutsdepart={src : 0}
+        coutsarrivee={src:self.heuristique()}
+        parents={src:None}
+        while len(avisiter)!=0:
+            sommet=heapq.heappop(avisiter)[1]
+            if sommet==dst:
+                break
+            for voisin in Grid(self.m, self.n, self.de_hashage_a_grille(sommet)).voisins_de_la_grille():
+                d=1
+                if voisin not in coutsdepart.keys() and voisin not in coutsarrivee.keys() : 
+                    coutsarrivee[voisin]=maths.inf
+                    coutsdepart[voisin]=maths.inf
+
+                if coutsdepart[sommet]+d<coutsdepart[voisin]:
+                    parents[voisin]=sommet
+                    coutsdepart[voisin]=coutsdepart[sommet]+d
+                    coutsarrivee[voisin]=coutsdepart[sommet]+d+Solver(self.m, self.n, self.de_hashage_a_grille(voisin)).heuristique()
+                    if (coutsarrivee[voisin], voisin) not in avisiter:
+                        heapq.heappush(avisiter, (coutsarrivee[voisin], voisin))
+        chemin=[dst]
+        i=dst
+        while i!=None:
+            chemin.append(parents[i])
+            i=parents[i]
+        chemin.pop()   
+        chemin.reverse()
+        return chemin
+
+
+
+
+
+
+
+
+
+
+
+        
         
     #Algorithme de la question 3
     def get_solution(self):

@@ -114,7 +114,7 @@ class Grid():
 
     #Implémentation d'une méthode qui permet de représenter graphiquement la grille grâce à Pygame
     #Algorithme de la question 4
-    def representation(self):
+    def representation(self): #ATTENTION : IL FAUT RUN DEUX FOIS GRILLE.REPRESENTATION() POUR AFFICHER LA REPRÉSENTATION
         pygame.init() #Initiation de Pygame
         fenetre = pygame.display.set_mode((1000,1000)) #Création de la fenêtre
         pygame.display.set_caption('Représentation graphique de la grille') #On donne un titre à la grille
@@ -144,7 +144,8 @@ class Grid():
         for i in range(self.m):
             for j in range(self.n):
                 grille+=str(self.state[i][j])
-            grille+="/" #Nous avons fait le choix de représenter les grilles par des chaînes de caractères, en utilisant des / pour indiquer les fins de ligne. EX : [[1, 2], [3, 4]] sera '12/34/'
+                grille+="n"
+            grille+="/" #Nous avons fait le choix de représenter les grilles par des chaînes de caractères, en utilisant des / pour indiquer les fins de ligne, et des n pour des fins de numéros (car pour les grilles avec des supérieurs supérieurs à 10, cela ne va pas fonctionner). EX : [[1, 2], [3, 4]] sera '1n2n/3n4n/'
         return grille
     
     #Implémentation d'une fonction pour transformer une liste Python en un objet de la classe Grid
@@ -300,9 +301,13 @@ class Grid():
                 k=[]
                 
             else:
-                k.append(int(i))
+                if i!="n":
+
+                    k.append(int(float(i)))
                 
         return l
+    
+    
         
 
 
