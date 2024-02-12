@@ -349,7 +349,7 @@ class Grid():
         chemin.reverse()
         return chemin
 
-    def astar(self):
+    
 
     
 
@@ -380,7 +380,7 @@ class Grid():
                     raise Exception("Format incorrect")
                 initial_state[i_line] = line_state
             grid = Grid(m, n, initial_state)
-            return grid
+        return grid
 
 
 
