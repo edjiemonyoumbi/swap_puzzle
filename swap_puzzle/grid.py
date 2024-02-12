@@ -289,7 +289,7 @@ class Grid():
 
     @staticmethod #On utilise une staticmethod car cette fonction prend en entrée un objet de type string et non une grille, et qui permet de le transformer en tableau. 
     def de_hashage_a_grille(grille):
-        grille2=grille.split('n')
+        grille2=grille.split('n') #On enlève les n
         l=[]
         k=[]
         
@@ -299,7 +299,7 @@ class Grid():
                 l.append(k)
                 k=[]
             else:
-                if i[0]=='/':
+                if i[0]=='/': #Quand on a splité par n, certains nombres 'k' deviennent '/k' donc il faut pouvoir accéder à k en resplitant par / cette fois 
                     l.append(k)
                     k=[]
                     k.append(int(float(i.split('/')[1])))
