@@ -247,7 +247,7 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
                                         fenetre.blit(texte, ((55*j)+20, 20+(55*i))) #On met le texte dans les cases
                                 
                                 pygame.display.update()
-                                pygame.time.delay(1000) #On laisse un peu de temps entre chaque swap pour que l'utilisateur puisse bien voir la solution
+                                pygame.time.delay(2500) #On laisse un peu de temps entre chaque swap pour que l'utilisateur puisse bien voir la solution
                             pygame.quit()
 
 
