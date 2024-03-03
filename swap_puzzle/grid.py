@@ -112,6 +112,16 @@ class Grid():
             cell2=el[1]
             self.swap(cell1, cell2) #On parcourt la liste des cases à échanger et on utilise la méthode swap implémentée auparavant 
 
+
+    def obtenir_le_swap(self, grille1, grille2):
+        L=[]
+        for i in range(self.m):
+            for j in range(self.n):
+                if Grid(self.m, self.n, self.de_hashage_a_grille(grille1)).state[i][j]!=Grid(self.m, self.n, self.de_hashage_a_grille(grille2)).state[i][j]:
+                    L.append((i, j))
+        
+        return (L[0], L[1])
+
     #Implémentation d'une méthode qui permet de représenter graphiquement la grille grâce à Pygame
     #Algorithme de la question 4
     def representation(self): #ATTENTION : IL FAUT RUN DEUX FOIS GRILLE.REPRESENTATION() POUR AFFICHER LA REPRÉSENTATION
@@ -239,7 +249,11 @@ class Grid():
             for j in self.graph_des_sommets()[i]:
                 dico.add_edge(i, j) #On ajoute les add_edge entre les grilles et leurs voisines. On a ainsi construit un objet de type Graph qui contient le graph de toutes les grilles possibles, et leurs voisines par un swap. 
         
-        return dico.bfs(self.hashage(), self.grille_voulue()) #On peut maintenant grâce à cela utiliser l'algorithme bfs précédemment construit dans la classe Graph, afin de résoudre le swap puzzle. 
+        chemin= dico.bfs(self.hashage(), self.grille_voulue()) #On peut maintenant grâce à cela utiliser l'algorithme bfs précédemment construit dans la classe Graph, afin de résoudre le swap puzzle. 
+        L=[]
+        for i in range(len(chemin)-1):
+            L.append(self.obtenir_le_swap(chemin[i], chemin[i+1])) #On obtient les swaps à partir de la liste des grilles, pour renvoyer les swaps au lieu des grilles
+        return L
     
     #La longueur du chemin renvoyé est bien plus faible que dans la méthode naïve : la méthode naïve n'était donc bien pas optimale en terme de nombre de swaps à effectuer pour atteindre la grille ordonnée. Cependant, la méthode naïve est plus rapide.
     #Nombre de noeuds : Il est égal au nombre de permutations de la liste des entiers de 1 à m*n, donc il y en a (m*n)!
@@ -352,11 +366,17 @@ class Grid():
         chemin=[dst]
         i=dst
         while i!=None:
-            chemin.append(parents[i])
+            chemin.append(parents[i]) #On remonte les parents
             i=parents[i]
-        chemin.pop()   
-        chemin.reverse()
-        return chemin
+        chemin.pop()   #On enlève la valeur None de src 
+        chemin.reverse() #Et on inverse la liste
+        L=[]
+        for i in range(len(chemin)-1):
+            L.append(self.obtenir_le_swap(chemin[i], chemin[i+1])) #Puis on prend les swaps pour les retourner au lieu des grilles
+        return L
+    
+    
+    
 
     
 
