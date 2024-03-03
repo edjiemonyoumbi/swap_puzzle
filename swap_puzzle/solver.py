@@ -114,6 +114,7 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
         noir = pygame.Color(0,0,0)
         vert=pygame.Color(0,255,0)
         bleu=pygame.Color(0,0,255)
+        jaune=pygame.Color(255,255,0)
         fenetre.fill(noir) #On remplit la couleur par un fond noir car on va représenter la grille par des cases blanches
         running=True #Nous utilisons running=True pour nous permettre de faire fonctionner les interfaces tant qu'on le souhaite, puis dès que l'on voudra changer d'interface, il suffira de mettre Running=False puis refaire une autre interface avec running=True
         font2=pygame.font.Font(None, 32) #Police d'écriture
@@ -239,8 +240,12 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
                                     for j in range(self.n):
                                         font=pygame.font.Font(None, 32) #Police d'écriture
                                         texte = font.render(str(self.state[i][j]),True,noir) #Texte à mettre dans les cases
-                                        pygame.draw.rect(fenetre,blanc,((55*j),(55*i),50,50)) #On dessine les cases
+                                        if (i==cell1[0] and j==cell1[1]) or (i==cell2[0] and j==cell2[1]):
+                                            pygame.draw.rect(fenetre,jaune,((55*j),(55*i),50,50)) #On dessine les cases
+                                        else:
+                                            pygame.draw.rect(fenetre,blanc,((55*j),(55*i),50,50)) #On dessine les cases
                                         fenetre.blit(texte, ((55*j)+20, 20+(55*i))) #On met le texte dans les cases
+                                
                                 pygame.display.update()
                                 pygame.time.delay(1000) #On laisse un peu de temps entre chaque swap pour que l'utilisateur puisse bien voir la solution
                             pygame.quit()
