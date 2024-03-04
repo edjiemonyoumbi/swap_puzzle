@@ -131,19 +131,25 @@ class Grid():
         blanc = pygame.Color(255, 255, 255) #on code les couleurs noir et blanc grâce au code rgb
         noir = pygame.Color(0,0,0)
         fenetre.fill(noir) #On remplir la couleur par un fond noir car on va représenter la grille par des cases blanches
-        
-        for i in range(self.m):
-            for j in range(self.n):
-                font=pygame.font.Font(None, 32) #Police d'écriture
-                texte = font.render(str(self.state[i][j]),True,noir) #Texte à mettre dans les cases
-                pygame.draw.rect(fenetre,blanc,((55*j),(55*i),50,50)) #On dessine les cases
-                fenetre.blit(texte, ((55*j)+20, 20+(55*i))) #On met le texte dans les cases
+        running=True
+        while running : 
+            for i in range(self.m):
+                for j in range(self.n):
+                    font=pygame.font.Font(None, 32) #Police d'écriture
+                    texte = font.render(str(self.state[i][j]),True,noir) #Texte à mettre dans les cases
+                    pygame.draw.rect(fenetre,blanc,((55*j),(55*i),50,50)) #On dessine les cases
+                    fenetre.blit(texte, ((55*j)+20, 20+(55*i))) #On met le texte dans les cases
+            pygame.display.update() #On met à jour le display
+            for event in pygame.event.get(): #On attend un évenement de l'utilisateur, en l'occurence qu'il clique sur un des boutons de difficulté
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            
 
     
                 
 
         
-        pygame.display.update() #On met à jour le display
+        
         
         pygame.quit() #On quitte Pygame
     

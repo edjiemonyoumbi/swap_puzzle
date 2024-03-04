@@ -339,33 +339,6 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
     
     
 
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-        
         
     #Algorithme de la question 3
     def get_solution(self):
