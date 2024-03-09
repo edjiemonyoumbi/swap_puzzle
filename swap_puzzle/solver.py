@@ -95,6 +95,130 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
             L.append(self.obtenir_le_swap(chemin[i], chemin[i+1]))
         return L
     
+    def astar2(self, case1, case2):
+        src=super().hashage()
+        dst=super().grille_voulue()
+        Dejavu={} #On crée un dictionnaire Dejavu dans lequel on attribuera aux noeuds(les clés) des valeurs booléennes (True) si on les a déjà visité
+        Distance={src:0} #Dictionnaire qui compte les distances au noeud d'origine
+        Parents={src:None} #Comme pour bfs, il faut crée un dictionnaire de parents qui nous permettra de remonter à la solution. 
+        avisiter=[] #Nous allons créer une file de priorité à partir de cette liste avisiter
+        
+        heapq.heapify(avisiter) #On utilise alors le module heapq pour cela
+        heapq.heappush(avisiter, (self.heuristique(), src)) #Et cette file de priorité sera basée sur la distance à l'origine et la valeur de l'heuristique pour aller à la grille ordonnée
+        while len(avisiter)!=0: #On boucle sur le fait que la liste avisiter contienne encore des éléments, mais en réalité, on arrêtera cette boucle dès que l'on aura visité dst. 
+            x=heapq.heappop(avisiter)[1] #On utilise heapq pour prendre l'élément qui minimise la valeur distance à l'origine+heuristique jusqu'à la grille ordonnée
+            
+            
+            if x==dst:
+                break
+            
+            if x in Dejavu: #On stoppe l'itération en cours si x a déjà été visité, afin de ne pas perdre en temps
+                continue
+            if x not in Distance.keys(): 
+                Distance[x]=maths.inf #On fixe la valeur de distance à l'origine de base de tous les sommets à +inf
+
+          
+                    
+            Dejavu[x]=True #On indique que le sommet a déjà été visité
+            for y in Grid(self.m, self.n, self.de_hashage_a_grille(x)).voisins_de_la_grille_2(case1, case2): #On parcourt tous les voisins de la grille 
+                if y in Dejavu: #Si le voisin a déjà été visité, alors on peut éviter de perdre du temps en passant à l'itération suivante
+                    continue
+                if y not in Distance.keys(): 
+                    Distance[y]=maths.inf
+                
+                
+
+                        
+                
+
+
+                if Distance[x]+1<Distance[y]: #On construit le chemin le plus court de src à dst en faisant du proche en proche
+                    Distance[y]=Distance[x]+1 #A* est un algorithme sur les graphs pondérés, mais ici la pondération vaut 1, car tous les voisins sont accessibles de la même manière (par un swap)
+                    Parents[y]=x #On ajoute aux parents pour pouvoir ensuite remonter le chemin le pus court. 
+                    if y not in Dejavu:
+                        heapq.heappush(avisiter, (Solver(self.m, self.n, self.de_hashage_a_grille(y)).heuristique()+Distance[y], y)) #si y n'a pas encore été déjà visitée, on l'ajoute alors à la file de priorité de heapq
+        #Mêmes explications que pour bfs_ameliore pour la suite 
+        chemin=[dst]
+        i=dst
+        while i!=None:
+            chemin.append(Parents[i])
+            i=Parents[i]
+        chemin.pop()   
+        chemin.reverse()
+        L=[]
+        for i in range(len(chemin)-1):
+            L.append(self.obtenir_le_swap(chemin[i], chemin[i+1]))
+        return L
+
+    def astar3(self):
+        src=super().hashage()
+        dst=super().grille_voulue()
+        Dejavu={} #On crée un dictionnaire Dejavu dans lequel on attribuera aux noeuds(les clés) des valeurs booléennes (True) si on les a déjà visité
+        Distance={src:0} #Dictionnaire qui compte les distances au noeud d'origine
+        Parents={src:None} #Comme pour bfs, il faut crée un dictionnaire de parents qui nous permettra de remonter à la solution. 
+        avisiter=[] #Nous allons créer une file de priorité à partir de cette liste avisiter
+        
+        heapq.heapify(avisiter) #On utilise alors le module heapq pour cela
+        heapq.heappush(avisiter, (self.heuristique(), src)) #Et cette file de priorité sera basée sur la distance à l'origine et la valeur de l'heuristique pour aller à la grille ordonnée
+        while len(avisiter)!=0: #On boucle sur le fait que la liste avisiter contienne encore des éléments, mais en réalité, on arrêtera cette boucle dès que l'on aura visité dst. 
+            x=heapq.heappop(avisiter)[1] #On utilise heapq pour prendre l'élément qui minimise la valeur distance à l'origine+heuristique jusqu'à la grille ordonnée
+            
+            
+            if x==dst:
+                break
+            
+            if x in Dejavu: #On stoppe l'itération en cours si x a déjà été visité, afin de ne pas perdre en temps
+                continue
+            if x not in Distance.keys(): 
+                Distance[x]=maths.inf #On fixe la valeur de distance à l'origine de base de tous les sommets à +inf
+
+          
+                    
+            Dejavu[x]=True #On indique que le sommet a déjà été visité
+            for y in Grid(self.m, self.n, self.de_hashage_a_grille(x)).voisins_de_la_grille_3(): #On parcourt tous les voisins de la grille 
+                if y in Dejavu: #Si le voisin a déjà été visité, alors on peut éviter de perdre du temps en passant à l'itération suivante
+                    continue
+                if y not in Distance.keys(): 
+                    Distance[y]=maths.inf
+                
+                
+
+                        
+                
+
+
+                if Distance[x]+1<Distance[y]: #On construit le chemin le plus court de src à dst en faisant du proche en proche
+                    Distance[y]=Distance[x]+1 #A* est un algorithme sur les graphs pondérés, mais ici la pondération vaut 1, car tous les voisins sont accessibles de la même manière (par un swap)
+                    Parents[y]=x #On ajoute aux parents pour pouvoir ensuite remonter le chemin le pus court. 
+                    if y not in Dejavu:
+                        heapq.heappush(avisiter, (Solver(self.m, self.n, self.de_hashage_a_grille(y)).heuristique()+Distance[y], y)) #si y n'a pas encore été déjà visitée, on l'ajoute alors à la file de priorité de heapq
+        #Mêmes explications que pour bfs_ameliore pour la suite 
+        chemin=[dst]
+        i=dst
+        while i!=None:
+            chemin.append(Parents[i])
+            i=Parents[i]
+        chemin.pop()   
+        chemin.reverse()
+        L=[]
+        for i in range(len(chemin)-1):
+            L.append(self.obtenir_le_swap(chemin[i], chemin[i+1]))
+        return L
+    
+    
+        
+
+
+
+
+
+
+
+
+
+
+
+    
     def genere_grille(self): #Programme qui génère une grille aléatoirement, en utilisant le module random
         L=[i for i in range(1, self.m*self.n+1)]
         S=[]

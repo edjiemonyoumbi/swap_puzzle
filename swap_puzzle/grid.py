@@ -381,9 +381,121 @@ class Grid():
             L.append(self.obtenir_le_swap(chemin[i], chemin[i+1])) #Puis on prend les swaps pour les retourner au lieu des grilles
         return L
     
-    
-    
+  
+    def cellules_adjacentes(self,i,j):
+        adjacentes=[]
+        # Coordonnées des cellules adjacentes possibles
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        for (di, dj) in directions:
+            ni, nj = i + di, j + dj
+            # Vérifie si les coordonnées sont valides
+            if 0 <= ni < self.m and 0<= nj < self.n:
+                adjacentes.append((ni,nj))
+        return adjacentes
 
+    
+    
+    def voisins_de_la_grille_2(self, case_interdite_1,case_interdite_2): #On crée un algorithme qui construit toutes les grilles voisines d'une grille par un swap, au lieu de les chercher parmi toutes les grilles possibles comme précédemment. 
+        L=[]
+        
+        for i in range(self.m-1): #Swaps en excluant la dernière colonne et la dernière ligne
+            for j in range(self.n-1):
+                if (((i,j)==case_interdite_1 and (i+1,j)==case_interdite_2) or ((i,j)==case_interdite_2 and (i+1,j)==case_interdite_1))==False:
+                    self.swap((i, j), (i+1, j))
+                    k=copy.deepcopy(self.state) #Il faut utiliser une deep copy, sinon la valeur de k est modifiée quand on modifie self.state
+                    L.append(k)
+                    
+                
+                    self.swap((i, j), (i+1, j))
+                
+                if(((i,j)==case_interdite_1 and (i,j+1)==case_interdite_2) or ((i,j)==case_interdite_2 and (i,j+1)==case_interdite_1))==False:
+                    self.swap((i, j), (i, j+1))
+
+                    k=copy.deepcopy(self.state)
+                    L.append(k)
+                    
+                    
+                    self.swap((i, j), (i, j+1))
+                
+        for j in range(self.n-1): #Swaps sur la dernière ligne
+            if (((self.m-1, j)==case_interdite_1 and (self.m-1, j+1)==case_interdite_2) or ((self.m-1, j)==case_interdite_2 and (self.m-1, j+1)==case_interdite_1))==False:
+                self.swap((self.m-1, j), (self.m-1, j+1))
+                k=copy.deepcopy(self.state)
+                L.append(k)
+                
+                self.swap((self.m-1, j), (self.m-1, j+1))
+            
+            
+        for i in range(self.m-1): #Swaps sur la dernière colonne
+            
+            if (((i, self.n-1)==case_interdite_1 and (i+1, self.n-1)==case_interdite_2) or ((i, self.n-1)==case_interdite_2 and (i+1, self.n-1)==case_interdite_1))==False:
+                self.swap((i, self.n-1), (i+1, self.n-1))
+                k=copy.deepcopy(self.state)
+                L.append(k)
+                
+                self.swap((i, self.n-1), (i+1, self.n-1))
+            
+
+        H=[]
+        for y in L:
+            k=Grid(self.m, self.n, y).hashage()
+            H.append(k)
+            
+        return H
+
+    def voisins_de_la_grille_3(self): #On crée un algorithme qui construit toutes les grilles voisines d'une grille par un swap, au lieu de les chercher parmi toutes les grilles possibles comme précédemment. 
+        L=[]
+        i=random.randint(0,self.m-1)
+        j=random.randint(0,self.n-1)
+        case_interdite_1=(i,j)
+        case_interdite_2= random.choice(self.cellules_adjacentes(i,j))
+        while case_interdite_2==case_interdite_1:
+            case_interdite_2= random.choice(self.cellules_adjacentes(i,j))
+
+        for i in range(self.m-1): #Swaps en excluant la dernière colonne et la dernière ligne
+            for j in range(self.n-1):
+                if (((i,j)==case_interdite_1 and (i+1,j)==case_interdite_2) or ((i,j)==case_interdite_2 and (i+1,j)==case_interdite_1))==False:
+                    self.swap((i, j), (i+1, j))
+                    k=copy.deepcopy(self.state) #Il faut utiliser une deep copy, sinon la valeur de k est modifiée quand on modifie self.state
+                    L.append(k)
+                    
+                
+                    self.swap((i, j), (i+1, j))
+                
+                if(((i,j)==case_interdite_1 and (i,j+1)==case_interdite_2) or ((i,j)==case_interdite_2 and (i,j+1)==case_interdite_1))==False:
+                    self.swap((i, j), (i, j+1))
+
+                    k=copy.deepcopy(self.state)
+                    L.append(k)
+                    
+                    
+                    self.swap((i, j), (i, j+1))
+                
+        for j in range(self.n-1): #Swaps sur la dernière ligne
+            if (((self.m-1, j)==case_interdite_1 and (self.m-1, j+1)==case_interdite_2) or ((self.m-1, j)==case_interdite_2 and (self.m-1, j+1)==case_interdite_1))==False:
+                self.swap((self.m-1, j), (self.m-1, j+1))
+                k=copy.deepcopy(self.state)
+                L.append(k)
+                
+                self.swap((self.m-1, j), (self.m-1, j+1))
+            
+            
+        for i in range(self.m-1): #Swaps sur la dernière colonne
+            
+            if (((i, self.n-1)==case_interdite_1 and (i+1, self.n-1)==case_interdite_2) or ((i, self.n-1)==case_interdite_2 and (i+1, self.n-1)==case_interdite_1))==False:
+                self.swap((i, self.n-1), (i+1, self.n-1))
+                k=copy.deepcopy(self.state)
+                L.append(k)
+                
+                self.swap((i, self.n-1), (i+1, self.n-1))
+            
+
+        H=[]
+        for y in L:
+            k=Grid(self.m, self.n, y).hashage()
+            H.append(k)
+            
+        return H
     
 
     
