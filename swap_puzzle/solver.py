@@ -70,6 +70,7 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
         return S
     
 
+
     #Implémentation de l'algorithme A*
 
     def astar(self):
@@ -127,7 +128,9 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
             L.append(self.obtenir_le_swap(chemin[i], chemin[i+1]))
         return L
     
-    def astar2(self, case1, case2):
+    
+    
+    def astar2(self, case1, case2): #Implémentation de l'algorithme qui prend en compte les échanges interdits, donnés par l'utilisateur
         src=super().hashage()
         dst=super().grille_voulue()
         Dejavu={} #On crée un dictionnaire Dejavu dans lequel on attribuera aux noeuds(les clés) des valeurs booléennes (True) si on les a déjà visité
@@ -182,7 +185,7 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
             L.append(self.obtenir_le_swap(chemin[i], chemin[i+1]))
         return L
 
-    def astar3(self):
+    def astar3(self): #Implémentation de A* qui prend en compte des échanges interdits à chaque étape de la résolution du puzzle. 
         src=super().hashage()
         dst=super().grille_voulue()
         Dejavu={} #On crée un dictionnaire Dejavu dans lequel on attribuera aux noeuds(les clés) des valeurs booléennes (True) si on les a déjà visité

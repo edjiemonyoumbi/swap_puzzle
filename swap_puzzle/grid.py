@@ -385,12 +385,10 @@ class Grid():
   
     def cellules_adjacentes(self,i,j):
         adjacentes=[]
-        # Coordonnées des cellules adjacentes possibles
-        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)] # on crée une liste des directions possibles autour de notre case
         for (di, dj) in directions:
-            ni, nj = i + di, j + dj
-            # Vérifie si les coordonnées sont valides
-            if 0 <= ni < self.m and 0<= nj < self.n:
+            ni, nj = i + di, j + dj 
+            if 0 <= ni < self.m and 0<= nj < self.n: # On vérifie si les coordonnées sont valides 
                 adjacentes.append((ni,nj))
         return adjacentes
 
@@ -401,7 +399,7 @@ class Grid():
         
         for i in range(self.m-1): #Swaps en excluant la dernière colonne et la dernière ligne
             for j in range(self.n-1):
-                if (((i,j)==case_interdite_1 and (i+1,j)==case_interdite_2) or ((i,j)==case_interdite_2 and (i+1,j)==case_interdite_1))==False:
+                if (((i,j)==case_interdite_1 and (i+1,j)==case_interdite_2) or ((i,j)==case_interdite_2 and (i+1,j)==case_interdite_1))==False: #On interdit le swap donné en entrée en rajoutant cette condition qui est réalisée uniquement si le swap n'est pas celui interdit.
                     self.swap((i, j), (i+1, j))
                     k=copy.deepcopy(self.state) #Il faut utiliser une deep copy, sinon la valeur de k est modifiée quand on modifie self.state
                     L.append(k)
