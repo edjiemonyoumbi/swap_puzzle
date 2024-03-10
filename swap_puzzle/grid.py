@@ -141,7 +141,7 @@ class Grid():
                     pygame.draw.rect(fenetre,blanc,((55*j),(55*i),50,50)) #On dessine les cases
                     fenetre.blit(texte, ((55*j)+20, 20+(55*i))) #On met le texte dans les cases
             pygame.display.update() #On met à jour le display
-            for event in pygame.event.get(): #On attend un évenement de l'utilisateur, en l'occurence qu'il clique sur un des boutons de difficulté
+            for event in pygame.event.get(): #On attend un évenement de l'utilisateur, en l'occurence qu'il clique sur quitter la fenêtre
                 if event.type == pygame.QUIT:
                     pygame.quit()
             
