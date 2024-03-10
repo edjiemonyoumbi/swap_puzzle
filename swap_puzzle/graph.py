@@ -98,7 +98,7 @@ class Graph:
         
         #si la grille est déjà la grille voulue, on renvoie elle même :
         if src == dst:
-            return [src]
+            return []
         
         #On initialise un dictionnaire de parents, qui va nous permettre de remonter grâce aux parents à la solution. 
         parents={src:None}

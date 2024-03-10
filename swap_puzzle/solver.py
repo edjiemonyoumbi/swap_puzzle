@@ -3,6 +3,7 @@ import heapq
 import math as maths
 import pygame
 import random
+import time
 
 class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la classe Grid, comme swap
     
@@ -25,6 +26,37 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
                 if compteur==k:
                     return (i, j)
                 compteur+=1
+
+    #Algorithme de la question 3
+    def get_solution(self):
+        L=[]
+        for i in range(1, (self.m)*(self.n)+1): #On fait une boucle sur tous les éléments de la grille : on va d'abord ranger 1, puis 2, etc...
+            pos=self.position(i)
+           
+            posv=self.position_voulue(i)
+            #On met l'élément à sa bonne colonne : on swap donc vers la droite s'il est trop à gauche et vers la gauche s'il est trop à droite
+            if pos[1]>posv[1]:
+                while pos[1]>posv[1]:
+                    super().swap(pos, (pos[0], pos[1]-1))
+                    L.append((pos, (pos[0], pos[1]-1)))
+                    pos=(pos[0], pos[1]-1)
+
+            if pos[1]<posv[1]:
+                while pos[1]<posv[1]:
+                    super().swap(pos, (pos[0], pos[1]+1))
+                    L.append((pos, (pos[0], pos[1]+1)))
+                    pos=(pos[0], pos[1]+1)
+            #Puis une fois qu'il est dans la bonne colonne, on le remonte jusqu'à sa bonne ligne. Notons qu'il est impossible de devoir descendre un élément, car on range d'abord 1, puis 2, puis 3 etc donc tous les éléments du haut sont déjà bien placés. 
+            while pos[0]>posv[0]:
+                super().swap(pos, (pos[0]-1, pos[1]))
+                L.append((pos, (pos[0]-1, pos[1])))
+                pos=(pos[0]-1, pos[1])
+        
+        return L
+
+        #La complexité de cet algorithme est de O((n*m)**2).
+        #En terme de nombre de swaps, il est de 0 dans le meilleur des cas, et dans le pire cas (grille complètement inversée) de (m*n)*(m+n-2)/2, car il y a (m*n) éléments dans la grille, et ils font en moyenne (m+n-2)/2 swaps pour arriver dans leur position voulue. La longueur de chemin parcourue n'est donc pas optimale. 
+        #Toute grille peut être résolue par cet algorithme naïf. 
 
     def heuristique(self):
         S=0
@@ -462,36 +494,12 @@ class Solver(Grid): #On fait un héritage pour utiliser les fonctions de la clas
 
     
     
-
+    
         
-    #Algorithme de la question 3
-    def get_solution(self):
-        L=[]
-        for i in range(1, (self.m)*(self.n)+1): #On fait une boucle sur tous les éléments de la grille : on va d'abord ranger 1, puis 2, etc...
-            pos=self.position(i)
-           
-            posv=self.position_voulue(i)
-            #On met l'élément à sa bonne colonne : on swap donc vers la droite s'il est trop à gauche et vers la gauche s'il est trop à droite
-            if pos[1]>posv[1]:
-                while pos[1]>posv[1]:
-                    super().swap(pos, (pos[0], pos[1]-1))
-                    L.append((pos, (pos[0], pos[1]-1)))
-                    pos=(pos[0], pos[1]-1)
+    
 
-            if pos[1]<posv[1]:
-                while pos[1]<posv[1]:
-                    super().swap(pos, (pos[0], pos[1]+1))
-                    L.append((pos, (pos[0], pos[1]+1)))
-                    pos=(pos[0], pos[1]+1)
-            #Puis une fois qu'il est dans la bonne colonne, on le remonte jusqu'à sa bonne ligne. Notons qu'il est impossible de devoir descendre un élément, car on range d'abord 1, puis 2, puis 3 etc donc tous les éléments du haut sont déjà bien placés. 
-            while pos[0]>posv[0]:
-                super().swap(pos, (pos[0]-1, pos[1]))
-                L.append((pos, (pos[0]-1, pos[1])))
-                pos=(pos[0]-1, pos[1])
-        
-        return L
-
-        #La complexité de cet algorithme est de O((n*m)**2).
-        #En terme de nombre de swaps, il est de 0 dans le meilleur des cas, et dans le pire cas (grille complètement inversée) de (m*n)*(m+n-2)/2, car il y a (m*n) éléments dans la grille, et ils font en moyenne (m+n-2)/2 swaps pour arriver dans leur position voulue. La longueur de chemin parcourue n'est donc pas optimale. 
-        #Toute grille peut être résolue par cet algorithme naïf. 
-        
+grille=Solver(6, 6, [[34, 20, 26, 1, 25, 13], [12, 35, 11, 31, 7, 27], [6, 2, 17, 36, 30, 21], [9, 29, 8, 3, 16, 18], [32, 15, 4, 22, 14, 19], [24, 33, 23, 10, 28, 5]])
+t = time.perf_counter()
+print(len(grille.get_solution()))
+print("Voici le temps de la méthode naïve")
+print(time.perf_counter() - t)

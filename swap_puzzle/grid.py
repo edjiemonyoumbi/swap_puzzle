@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import pygame 
 from graph import Graph
 import copy
+import time
 
 #Création de la classe Grid
 class Grid():
@@ -497,8 +498,10 @@ class Grid():
             
         return H
     
-
     
+    
+    
+
 
 
     @classmethod
