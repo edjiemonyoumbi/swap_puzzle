@@ -1,6 +1,6 @@
 # Rapport du projet de programmation
 
-[![Repo](https://img.shields.io/badge/Projet-GitHub-blue)](https://github.com/atbrt/projet_programmation)
+[![Repo](https://img.shields.io/badge/Projet-GitHub-blue)](https://github.com/edjiemonyoumbi/swap_puzzle)
 
 ## 1. Introduction : Présentation du problème du Swap Puzzle
 
