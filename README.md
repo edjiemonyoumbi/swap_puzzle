@@ -10,6 +10,8 @@ Dans ce projet, nous nous intéressons au problème du **swap puzzle**. Imaginon
 
 Les seuls mouvements autorisés sont des **swaps** verticaux ou horizontaux entre carreaux adjacents. Les swaps ne sont pas autorisés sur les bords extérieurs de la grille.
 
+![Swap Illustration](swap.png)
+
 ### B. Applications du problème
 
 La résolution de ce problème a des applications en **intelligence artificielle** et en **recherche opérationnelle**, notamment pour développer des algorithmes de recherche et d'optimisation. Par exemple, il est possible d'utiliser des techniques telles que la recherche en profondeur, la recherche en largeur, ou l'algorithme **A*** pour résoudre ce type de problème.
